@@ -1,38 +1,18 @@
-def findStartMarker(line):
-    start_characters = [] #Always contains for characters
-    sop_marker = 0
-    is_Found = True 
-    line_string = list(line)
-    
-    for i in range(0, len(line_string), 1):
-        start_characters.append(line_string[i])
-        if(len(start_characters) > 4):
-            start_characters.remove(start_characters[0])
-        if(len(start_characters) == 4):
-            #Check characters, if they are all different
-            for z in range(0, len(start_characters), 1):
-                for k in range(0, len(start_characters), 1):
-                    if(int(k) == int(z)):
-                        continue
-                    if(str(start_characters[z]) == str(start_characters[k])):
-                        is_Found = False
-            if(is_Found == True):
-                sop_marker=i+1
-                return start_characters, sop_marker      
-            is_Found = True  
+#View the commit-history to see my first solution of day 6
 
-def findMessageMarker(line, startMarker):
+def findMarker(line, searchSize, startIdx=0):
     start_characters = [] #Always contains for characters
-    sop_marker = 0
     is_Found = True 
     line_string = list(line)
+
+    if(startIdx < 0):
+        startIdx = 0
     
-    for i in range(startMarker-1, len(line_string), 1):
+    for i in range(startIdx, len(line_string), 1):
         start_characters.append(line_string[i])
-        if(len(start_characters) > 14):
+        if(len(start_characters) > searchSize):
             start_characters.remove(start_characters[0])
-        if(len(start_characters) == 14):
-            #Check characters, if they are all different
+        if(len(start_characters) == searchSize):
             for z in range(0, len(start_characters), 1):
                 for k in range(0, len(start_characters), 1):
                     if(int(k) == int(z)):
@@ -40,11 +20,12 @@ def findMessageMarker(line, startMarker):
                     if(str(start_characters[z]) == str(start_characters[k])):
                         is_Found = False
             if(is_Found == True):
-                sop_marker=i+1
-                return start_characters, sop_marker      
+                return start_characters, i   
             is_Found = True   
           
 with open("day_6\script_6_values.txt") as file:
     for line in file:
-        marker = findStartMarker(line)
-        print(findMessageMarker(line, 0))
+        startMarker = findMarker(line=line, searchSize=4, startIdx=0)
+        messageMarker = findMarker(line=line, searchSize=14, startIdx=int(startMarker[1]))
+        print(f"Solution 1) Start-of-packet after {int(startMarker[1])+1} characters")
+        print(f"Solution 2) Start-of-message after {int(messageMarker[1])+1} characters")
